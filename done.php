@@ -13,7 +13,7 @@ require 'done-logic.php';
 
 <body>
     <h1>Book search</h1>
-    <h2>Version B</h2>
+    <h2>Version C</h2>
 
     <p>
         You searched for <strong> <?= htmlentities($results['searchTerm']) ?></strong>.
