@@ -8,11 +8,9 @@
 </head>
 <body>
     <h1>Book Search</h1>
-    <h2>Version A</h2>
-    <form action="search.php" method="get">  
-    
-    
-    <label >Search for a book
+    <h2>Version B</h2>
+    <form action="search.php" method="POST">  
+        <label >Search for a book
         <input type="text" name="searchTerm" value="The Great Gatsby">
     </label>
 
