@@ -1,34 +1,67 @@
 <?php 
-# Start the session, since we'll be be using it below
+
 session_start();
 
-# Get the search term from the form data
-$searchTerm= $_POST['searchTerm']?? false;
+$searchTerm= $_GET['searchTerm'] ?? false;
 
-# Load teh book data
-$booksJson= file_get_contents('books.json');
+if($searchTerm){
+$booksJson = file_get_contents('books.json');
 $books= json_decode($booksJson, true);
 
-
-foreach($books as $title => $book){
-    if($book['title'] != $searchTerm){
-        unset($books[$title]);
+    foreach ($books as $title => $book){
+        if ($book['title'] != $searchTerm){
+            unset($books[$title]);
+        }
     }
 }
+$haveBooks = count($books) > 0;
 
-$haveBooks=count($books)>0;
+$_SESSION['results'] = [
 
-# Store our data in the session
-$_SESSION['results']=[
-    'books'=>$books,
-    'haveBooks'=> $haveBooks,
-    'searchTerm'=> $searchTerm,
+    'books' => $books,
+    'haveBooks' => $haveBooks,
+    'searchTerm' => $searchTerm,
 ];
-# Redirect visitor to comfirmation page
-#header function sends a raw HTTP header
+
 header('Location: done.php');
 
-# IMPORTANT:
-#Nothing can echo/output to the page in this script;
-#doing so will interface with the sessions and redirected
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Version A</title>
+</head>
+<body>
+
+<h1>Book Search</h1>
+<h2>Version B</h2>
+
+<p>
+You searched for <strong> <?= htmlentities($searchTerm) ?> </strong>
+</p>
+    
+<?php if($haveBooks) : ?>
+<h2>Results:</h2>
+<?php foreach ($books as $title => $book): ?>
+<div class='book'>
+    <?=$book['title'];?> by <?=$book['author']?></br>
+    <img src='<?php echo $book['link'];?>' alt='cover photo for <?=$book['title']; ?>'>
+    <p><strong>Release:</strong> 
+    <?=$book['year']?>    </p>
+</div>
+
+<?php endforeach?>
+<?php else: ?>
+<p>No results found</p>
+<?php endif?>
+
+<p>
+<a href="foobooks.php">Search Again</a>
+</p>
+
+</body>
+</html>
